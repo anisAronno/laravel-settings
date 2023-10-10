@@ -1,0 +1,65 @@
+{
+    "name": "anisaronno/laravel-settings",
+    "description": "Laravel Settings Table",
+    "version": "0.0.1",
+    "license": "MIT",
+    "keywords": [
+        "laravel-settings",
+        "WordPress",
+        "Laravel",
+        "wedevs"
+    ],
+    "authors": [
+        {
+            "name": "MD. Anichur Rahaman",
+            "email": "contact@anichur.com",
+            "homepage": "https://anichur.com",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://github.com/anisAronno/laravel-settings",
+    "require": {
+        "php": "^7.0|^8.0",
+        "illuminate/database": "^8.0|^9.0|^10.0",
+        "laravel/framework": "^8.0|^9.0|^10.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.4",
+        "orchestra/testbench": "^8.0",
+        "phpunit/phpunit": "^9.0",
+        "pestphp/pest": "^1.21"
+    },
+    "autoload": {
+        "files": [
+            "settings.php"
+        ],
+        "psr-4": {
+            "AnisAronno\\LaravelSettings\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AnisAronno\\LaravelSettings\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AnisAronno\\LaravelSettings\\LaravelSettingsServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
