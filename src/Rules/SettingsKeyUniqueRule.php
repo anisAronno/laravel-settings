@@ -26,7 +26,7 @@ class SettingsKeyUniqueRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $settings = SettingsProperty::where($attribute, $value)->first();
+        $settings = SettingsProperty::where($attribute, $value)->exists();
 
         if (empty($settings)) {
             return true;

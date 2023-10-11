@@ -7,6 +7,7 @@ use AnisAronno\LaravelSettings\Http\Requests\StoreLaravelSettingsRequest;
 use AnisAronno\LaravelSettings\Http\Requests\UpdateLaravelSettingsRequest;
 use AnisAronno\LaravelSettings\Http\Resources\SettingsResources;
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -36,7 +37,7 @@ class LaravelSettingsController extends Controller
             $key,
             now()->addDay(),
             function () use ($request) {
-                return SettingsProperty::query()
+                return SettingsProperty::query()->with('user')
                     ->when($request->has('search'), function ($query) use ($request) {
                         $query->where('title', 'LIKE', '%' . $request->input('search') . '%');
                     })
@@ -47,7 +48,7 @@ class LaravelSettingsController extends Controller
                         ]);
                     })
                     ->orderBy($request->input('orderBy', 'id'), $request->input('order', 'desc'))
-                    ->paginate(20)->withQueryString();
+                    ->paginate(10)->withQueryString();
             }
         );
 
@@ -55,12 +56,13 @@ class LaravelSettingsController extends Controller
     }
 
     /**
-    * Single Setting Fetch
-    * @param SettingsProperty $settings
-    * @return \Illuminate\Http\RedirectResponse
-    */
-    public function show(SettingsProperty $settingsProperty)
+     * Single Setting Fetch
+     * @param $key
+     * @return JsonResponse
+     */
+    public function show($key): JsonResponse
     {
+        $settingsProperty = SettingsProperty::findOrFail($key);
         return response()->json([
             'success' => true,
             'message' => 'Successfully Updated',
@@ -69,30 +71,32 @@ class LaravelSettingsController extends Controller
     }
 
     /**
-    *  Setting Store
-    * @param StoreLaravelSettingsRequest $request
-    * @return \Illuminate\Http\RedirectResponse
-    */
-    public function store(StoreLaravelSettingsRequest $request)
+     *  Setting Store
+     * @param  StoreLaravelSettingsRequest  $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function store(StoreLaravelSettingsRequest $request): JsonResponse
     {
-        $settings = SettingsProperty::create(array_merge($request->all(), ['user_id' => auth()->id()]));
+        $settingsProperty = setSettings($request->settings_key, $request->settings_value);
 
         return response()->json([
             'success' => true,
             'message' => 'Successfully Updated',
-            'data' => $settings]);
+            'data' => $settingsProperty
+        ]);
     }
 
     /**
-    * Summary of update
-    * @param UpdateLaravelSettingsRequest $request
-    * @param SettingsProperty $settings
-    * @return \Illuminate\Http\RedirectResponse
-    */
-    public function update(UpdateLaravelSettingsRequest $request, SettingsProperty $settingsProperty)
+     * Summary of update
+     * @param  UpdateLaravelSettingsRequest  $request
+     * @param $key
+     * @return JsonResponse
+     */
+    public function update(UpdateLaravelSettingsRequest $request, $key): JsonResponse
     {
         try {
-            $settingsProperty = $settingsProperty::updateSettings($settingsProperty->settings_key, $request->settings_value);
+            $settingsProperty = updateSettings($key, $request->settings_value);
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully Updated',
@@ -110,51 +114,21 @@ class LaravelSettingsController extends Controller
 
     /**
      * Summary of destroy
-     * @param SettingsProperty $settings
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  string  $key
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function destroy(SettingsProperty $settingsProperty)
+    public function destroy(string $key): JsonResponse
     {
-        try {
-            $settingsProperty::updateOption($settingsProperty->settings_key, null);
-
+        if(deleteSettings($key)) {
             return response()->json([
                 'success' => true,
-                'message' => 'Successfully Updated',
-                'data' => $settingsProperty
+                'message' => 'Successfully Deleted',
             ]);
-        } catch (\Throwable $th) {
+        } else {
             return response()->json(['
-                success' => false,
-                'message' => 'Update Failed'
-            ]);
-        }
-    }
-
-    /**
-    * Summary of bulkUpdate
-    * @param UpdateLaravelSettingsRequest $request
-    * @param SettingsProperty $settingsProperty
-    * @return \Illuminate\Http\RedirectResponse
-    */
-    public function bulkUpdate(UpdateLaravelSettingsRequest $request, SettingsProperty $settingsProperty)
-    {
-        $data = $request->only('settings_key', 'settings_value') ;
-
-        try {
-            foreach ($data as $key => $value) {
-                $settingsProperty::updateOption($key, $value);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Successfully Updated',
-                'data' => $settingsProperty
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json(['
-                success' => false,
-                'message' => 'Update Failed'
+                    success' => false,
+                'message' => 'Delete Failed'
             ]);
         }
     }

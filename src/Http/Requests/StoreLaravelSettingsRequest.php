@@ -5,6 +5,10 @@ namespace AnisAronno\LaravelSettings\Http\Requests;
 use AnisAronno\LaravelSettings\Rules\SettingsKeyUniqueRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property mixed $settings_key
+ * @property mixed $settings_value
+ */
 class StoreLaravelSettingsRequest extends FormRequest
 {
     /**
@@ -25,7 +29,7 @@ class StoreLaravelSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'settings_key' => ['required', 'string', 'max:250', new SettingsKeyUniqueRule()],
+            'settings_key' => ['required', 'string', 'max:250', 'unique:settings,settings_key'],
             'settings_value' => ['required', 'string', 'max:5000'],
         ];
     }

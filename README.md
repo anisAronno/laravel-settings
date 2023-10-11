@@ -1,4 +1,5 @@
 # Laravel Settings Package
+- laravel settings control as like as WordPress options
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -8,6 +9,8 @@
     - [Get All Settings Fields](#get-all-settings-fields)
     - [Set Settings](#set-settings)
     - [Update Settings](#update-settings)
+    - [Update or Create Settings](#update-or-create-settings)
+    - [Delete Settings](#delete-settings)
 4. [Settings Table CRUD](#settings-table-crud)
 5. [Contribution Guide](#contribution-guide)
 6. [License](#license)
@@ -84,15 +87,28 @@ Update an existing setting:
 updateSettings(string $key, string $value);
 ```
 
+### Update or Create Settings
+Update or Create setting:
+
+```php
+upsertSettings(string $key, string $value);
+```
+
+### Delete Settings
+Update an existing setting:
+
+```php
+deleteSettings(string $key);
+```
+
 ## Settings Table CRUD
 To manage your settings table, you can use the following routes:
 
-- Get all settings: `api/settings` (GET)
-- Get a single setting: `api/settings/{setting_key}` (GET)
-- Store a new setting: `api/settings` (POST)
-- Update a setting: `api/settings/{setting_key}` (POST)
-- Bulk update settings: `api/settings/bulk/update` (POST)
-- Delete a setting: `api/settings/{setting_key}` (DELETE)
+- Get all settings: `api/v1/settings` (GET) (name: `settings.index`)
+- Get a single setting: `api/v1/settings/{setting_key}` (GET) (name: `settings.show`)
+- Store a new setting: `api/v1/settings` (POST) (name: `settings.store`)
+- Update a setting: `api/v1/settings/update/{setting_key}` (POST) (name: `settings.update`)
+- Delete a setting: `api/v1/settings/{setting_key}` (DELETE) (name: `settings.destroy`)
 
 To view the complete route list, run:
 

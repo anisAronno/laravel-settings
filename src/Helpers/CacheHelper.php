@@ -6,15 +6,19 @@ use Illuminate\Cache\TaggedCache;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
+/**
+ * @property $files
+ * @method path($key)
+ */
 class CacheHelper
 {
     /**
      * Initialization cache instance
      *
-     * @param string $key
+     * @param  string|null  $key
      * @return Cache|TaggedCache
      */
-    public static function init($key = null)
+    public static function init(string $key = null)
     {
         if (Cache::supportsTags() && !is_null($key)) {
             return Cache::tags($key);
@@ -26,10 +30,10 @@ class CacheHelper
     /**
      * Forget Cache Key
      *
-     * @param string $key
-     * @return mixed
+     * @param  string  $key
+     * @return boolean
      */
-    public static function forgetCache($key)
+    public static function forgetCache(string $key): bool
     {
         if (Cache::supportsTags()) {
             return  Cache::tags($key)->flush();
@@ -42,10 +46,10 @@ class CacheHelper
     /**
      * Forget Cache key by tag
      *
-     * @param string $key
-     * @return void
+     * @param  string  $key
+     * @return boolean
      */
-    private static function forgetCacheByKey($key)
+    private static function forgetCacheByKey(string $key): bool
     {
         try {
             $allKeys = self::getCacheKeys($key);
@@ -58,17 +62,19 @@ class CacheHelper
                     break;
                 }
             }
+            return true;
         } catch (\Throwable $th) {
             Cache::flush();
+            return true;
         }
     }
 
     /**
      * Get ALl Cache Key
-     *
-     * @param string $key
+     * @param  string|null  $key
+     * @return array
       */
-    private static function getCacheKeys($key = null)
+    private static function getCacheKeys(string $key = null): array
     {
         switch (Cache::getDefaultDriver()) {
             case 'file':
@@ -121,10 +127,10 @@ class CacheHelper
     /**
      * Get Redis cache key
      *
-     * @param string $key
+     * @param  string|null  $key
      * @return array
      */
-    private static function getRedisCacheKeys($key = null): array
+    private static function getRedisCacheKeys(string $key = null): array
     {
         try {
             $cacheKeys = Redis::connection('cache')->keys('*');
@@ -152,10 +158,10 @@ class CacheHelper
     /**
      * get memcache key
      *
-     * @param string $key
+     * @param  string|null  $key
      * @return array
      */
-    private static function getMemcachedCacheKeys($key = null): array
+    private static function getMemcachedCacheKeys(string $key = null): array
     {
         try {
             $cacheKeys = [];

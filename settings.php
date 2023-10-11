@@ -1,10 +1,17 @@
 <?php
 
+use AnisAronno\LaravelSettings\Models\SettingsProperty;
+use Illuminate\Support\Collection;
+
 if (!function_exists('getAllSettings')) {
+
     /**
+     * Get all Settings
+     *
+     * @return Collection
      * @throws Exception
      */
-    function getAllSettings(): \Illuminate\Support\Collection
+    function getAllSettings(): Collection
     {
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::getAllSettings();
     }
@@ -12,6 +19,10 @@ if (!function_exists('getAllSettings')) {
 
 if (!function_exists('getSettings')) {
     /**
+     * Get Settings
+     *
+     * @param string $key
+     * @return string
      * @throws Exception
      */
     function getSettings(string $key): string
@@ -21,21 +32,64 @@ if (!function_exists('getSettings')) {
 }
 
 if (!function_exists('setSettings')) {
+
     /**
+     * Set Settings
+     *
+     * @param string $key
+     * @param string $value
+     * @return SettingsProperty
      * @throws Exception
      */
-    function setSettings(string $key, string  $value): \AnisAronno\LaravelSettings\Models\SettingsProperty
+    function setSettings(string $key, string  $value): SettingsProperty
     {
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::setSettings($key, $value);
     }
 }
 
 if (!function_exists('updateSettings')) {
+
     /**
+     * Update Settings
+     *
+     * @param string $key
+     * @param string $value
+     * @return SettingsProperty
      * @throws Exception
      */
-    function updateSettings(string $key, string  $value): \AnisAronno\LaravelSettings\Models\SettingsProperty
+    function updateSettings(string $key, string  $value): SettingsProperty
     {
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::updateSettings($key, $value);
+    }
+}
+
+if (!function_exists('upsertSettings')) {
+
+    /**
+     * Create or update Settings
+     *
+     * @param string $key
+     * @param string $value
+     * @return SettingsProperty
+     * @throws Exception
+     */
+    function upsertSettings(string $key, string  $value): SettingsProperty
+    {
+        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::upsertSettings($key, $value);
+    }
+}
+
+if (!function_exists('deleteSettings')) {
+
+    /**
+     * Delete Settings
+     *
+     * @param  string  $key
+     * @return bool
+     * @throws Exception
+     */
+    function deleteSettings(string $key): bool
+    {
+        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::deleteSettings($key);
     }
 }

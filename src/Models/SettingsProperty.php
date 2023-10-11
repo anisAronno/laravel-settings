@@ -5,10 +5,16 @@ namespace AnisAronno\LaravelSettings\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static where(string $string, string $settingsKey)
  * @method static select(string $string, string $string1)
+ * @method static updateOrCreate(string[] $array, array $array1)
+ * @method static findOrFail($key)
+ * @property mixed|string $settings_key
+ * @property mixed|string $settings_value
+ * @property mixed|string $user_id
  */
 class SettingsProperty extends Model
 {
@@ -31,7 +37,7 @@ class SettingsProperty extends Model
 
     protected $keyType = 'string';
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
