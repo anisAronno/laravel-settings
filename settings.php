@@ -22,12 +22,16 @@ if (!function_exists('getSettings')) {
      * Get Settings
      *
      * @param string $key
-     * @return string
+     * @return string|null
      * @throws Exception
      */
-    function getSettings(string $key): string
+    function getSettings(string $key): ?string
     {
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::getSettings($key);
+        try {
+            return AnisAronno\LaravelSettings\Helpers\SettingsHelper::getSettings($key);
+        } catch (\Throwable $th) {
+            return null;
+        }
     }
 }
 
@@ -54,10 +58,10 @@ if (!function_exists('updateSettings')) {
      *
      * @param string $key
      * @param string $value
-     * @return SettingsProperty
+     * @return bool
      * @throws Exception
      */
-    function updateSettings(string $key, string  $value): SettingsProperty
+    function updateSettings(string $key, string  $value): bool
     {
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::updateSettings($key, $value);
     }
