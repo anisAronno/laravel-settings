@@ -20,12 +20,17 @@ class SettingsHelper
     {
         $key = CacheHelper::getLaravelSettingsCacheKey();
 
+
         try {
             $settings = CacheHelper::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
-                return SettingsProperty::where('settings_key', $settingsKey)->first();
-
+                return SettingsProperty::select('settings_value')->find($settingsKey);
             });
-            return $settings['settings_value'];
+
+            if(isset($settings['settings_value'])) {
+                return $settings['settings_value'];
+            } else {
+                throw new Exception('The '.$settingsKey.' key was not found in the settings table.', 404);
+            }
 
         } catch (\Throwable $th) {
             throw new Exception($th->getMessage(), 400);
@@ -43,7 +48,7 @@ class SettingsHelper
      */
     public static function setSettings(string $key, string $value): SettingsProperty
     {
-        if(! self::issKeyAlphaDash($key, 'ascii')) {
+        if(! self::isKeyAlphaDash($key, 'ascii')) {
             throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
         }
 
@@ -80,7 +85,7 @@ class SettingsHelper
      */
     public static function upsertSettings(string $key, string $value): SettingsProperty
     {
-        if(! self::issKeyAlphaDash($key, 'ascii')) {
+        if(! self::isKeyAlphaDash($key, 'ascii')) {
             throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
         }
 
@@ -132,7 +137,7 @@ class SettingsHelper
      */
     public static function updateSettings(string $key, string $value = ''): bool
     {
-        if(! self::issKeyAlphaDash($key, 'ascii')) {
+        if(! self::isKeyAlphaDash($key, 'ascii')) {
             throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
         }
 
@@ -177,14 +182,15 @@ class SettingsHelper
     }
 
     /**
-    * Validate that an attribute contains only alpha-numeric characters, dashes, and underscores.
-    * If the 'ascii' option is passed, validate that an attribute contains only ascii alpha-numeric characters,
-    * dashes, and underscores.
-    *
-    * @param  mixed  $value
-    * @return bool
-    */
-    private static function issKeyAlphaDash($value, $parameters)
+     * Validate that an attribute contains only alpha-numeric characters, dashes, and underscores.
+     * If the 'ascii' option is passed, validate that an attribute contains only ascii alpha-numeric characters,
+     * dashes, and underscores.
+     *
+     * @param  mixed  $value
+     * @param  string  $parameters
+     * @return bool
+     */
+    private static function isKeyAlphaDash($value, string $parameters = 'ascii'): bool
     {
         if (! is_string($value) && ! is_numeric($value)) {
             return false;
