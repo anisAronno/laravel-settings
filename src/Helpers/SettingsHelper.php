@@ -19,7 +19,7 @@ class SettingsHelper
     public static function getSettings(string $settingsKey): string
     {
         $key = CacheHelper::getLaravelSettingsCacheKey();
- 
+
         try {
             $settings = CacheHelper::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
                 return SettingsProperty::where('settings_key', $settingsKey)->first();
@@ -43,6 +43,10 @@ class SettingsHelper
      */
     public static function setSettings(string $key, string $value): SettingsProperty
     {
+        if(! self::issKeyAlphaDash($key, 'ascii')) {
+            throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
+        }
+
         $settingProperty = new SettingsProperty();
 
         if ($settingProperty->where('settings_key', $key)->exists()) {
@@ -76,6 +80,10 @@ class SettingsHelper
      */
     public static function upsertSettings(string $key, string $value): SettingsProperty
     {
+        if(! self::issKeyAlphaDash($key, 'ascii')) {
+            throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -124,6 +132,10 @@ class SettingsHelper
      */
     public static function updateSettings(string $key, string $value = ''): bool
     {
+        if(! self::issKeyAlphaDash($key, 'ascii')) {
+            throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -162,5 +174,26 @@ class SettingsHelper
         } catch (\Throwable $th) {
             throw new Exception($th->getMessage(), 400);
         }
+    }
+
+    /**
+    * Validate that an attribute contains only alpha-numeric characters, dashes, and underscores.
+    * If the 'ascii' option is passed, validate that an attribute contains only ascii alpha-numeric characters,
+    * dashes, and underscores.
+    *
+    * @param  mixed  $value
+    * @return bool
+    */
+    private static function issKeyAlphaDash($value, $parameters)
+    {
+        if (! is_string($value) && ! is_numeric($value)) {
+            return false;
+        }
+
+        if (isset($parameters) && $parameters === 'ascii') {
+            return preg_match('/\A[a-zA-Z0-9_-]+\z/u', $value) > 0;
+        }
+
+        return preg_match('/\A[\pL\pM\pN_-]+\z/u', $value) > 0;
     }
 }

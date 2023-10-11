@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
 
 /**
  * @method static where(string $string, string $settingsKey)
@@ -31,15 +30,6 @@ class SettingsProperty extends Model
         'settings_value',
         'user_id',
     ];
-
-    protected static function boot()
-    {
-        static::creating(function ($model) {
-            $model->settings_key = Str::slug($model->settings_key);
-        });
-        
-        parent::boot();
-    }
 
     protected $primaryKey = 'settings_key';
 
