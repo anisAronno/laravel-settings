@@ -1,19 +1,25 @@
 # Laravel Settings Package
-- laravel settings control as like as WordPress options
+- Laravel settings control as like as WordPress options
 
 ## Table of Contents
-1. [Introduction](#introduction)
-2. [Installation](#installation)
-3. [Usage](#usage)
+- [Laravel Settings Package](#laravel-settings-package)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Installation](#installation)
+    - [Publish Migration, Factory, Config, and Seeder](#publish-migration-factory-config-and-seeder)
+    - [Run Migration](#run-migration)
+    - [Run Seeder](#run-seeder)
+    - [Define User Model Relation (Optional)](#define-user-model-relation-optional)
+  - [Usage](#usage)
     - [Get Settings Field](#get-settings-field)
     - [Get All Settings Fields](#get-all-settings-fields)
     - [Set Settings](#set-settings)
     - [Update Settings](#update-settings)
     - [Update or Create Settings](#update-or-create-settings)
     - [Delete Settings](#delete-settings)
-4. [Settings Table CRUD](#settings-table-crud)
-5. [Contribution Guide](#contribution-guide)
-6. [License](#license)
+  - [Settings Table CRUD](#settings-table-crud)
+  - [Contribution Guide](#contribution-guide)
+  - [License](#license)
 
 ## Introduction
 The Laravel Settings package simplifies the management of application settings in your Laravel project. This README provides installation instructions, usage examples, and additional information.
@@ -121,4 +127,3 @@ Please follow our [Contribution Guide](https://github.com/anisAronno/multipurpos
 
 ## License
 This package is open-source software licensed under the [MIT License](https://opensource.org/licenses/MIT).
-```
