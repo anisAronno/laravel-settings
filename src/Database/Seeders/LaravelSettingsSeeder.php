@@ -33,7 +33,6 @@ class LaravelSettingsSeeder extends Seeder
         setSettings('user_default_role', 'user');
         setSettings('site_url', env('APP_URL', 'http://multipurpose-admin-panel-boilerplate.test'));
         setSettings('time_zone', 'Asia/Dhaka');
-        setSettings('language', env('APP_LANGUAGE', 'en'));
         setSettings('address', 'Mirpur-DOHS, Dhaka');
         setSettings('any_one_can_register', 'false');
         setSettings('pagination_limit', 10);

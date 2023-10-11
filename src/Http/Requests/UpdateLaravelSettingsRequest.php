@@ -35,6 +35,7 @@ class UpdateLaravelSettingsRequest extends FormRequest
                 'required',
                 'string',
                 'max:250',
+                'alpha_dash:ascii',
                 Rule::unique('settings', 'settings_key')->ignore($key, 'settings_key'),
             ],
             'settings_value' => ['required', 'string', 'max:5000'],

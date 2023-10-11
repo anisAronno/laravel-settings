@@ -19,10 +19,9 @@ class SettingsHelper
     public static function getSettings(string $settingsKey): string
     {
         $key = CacheHelper::getLaravelSettingsCacheKey();
-        $cacheKey =  $key.md5(serialize(['getSettings']));
-
+ 
         try {
-            $settings = CacheHelper::init($key)->remember($cacheKey, now()->addDay(), function () use ($settingsKey) {
+            $settings = CacheHelper::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
                 return SettingsProperty::where('settings_key', $settingsKey)->first();
 
             });

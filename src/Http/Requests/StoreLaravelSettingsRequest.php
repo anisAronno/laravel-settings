@@ -29,7 +29,7 @@ class StoreLaravelSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'settings_key' => ['required', 'string', 'max:250', 'unique:settings,settings_key'],
+            'settings_key' => ['required', 'string', 'max:250', 'alpha_dash:ascii', 'unique:settings,settings_key'],
             'settings_value' => ['required', 'string', 'max:5000'],
         ];
     }
