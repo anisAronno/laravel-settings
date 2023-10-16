@@ -2,7 +2,8 @@
 
 namespace AnisAronno\LaravelSettings\Http\Controllers;
 
-use AnisAronno\LaravelSettings\Helpers\CacheHelper;
+use AnisAronno\LaravelCacheMaster\CacheControl;
+use AnisAronno\LaravelSettings\Helpers\CacheKey;
 use AnisAronno\LaravelSettings\Http\Requests\StoreLaravelSettingsRequest;
 use AnisAronno\LaravelSettings\Http\Requests\UpdateLaravelSettingsRequest;
 use AnisAronno\LaravelSettings\Http\Resources\SettingsResources;
@@ -29,11 +30,11 @@ class LaravelSettingsController extends Controller
         $endDate = $request->query('endDate', '');
         $page = $request->query('page', 1);
 
-        $imageCacheKey = CacheHelper::getLaravelSettingsCacheKey();
+        $imageCacheKey = CacheKey::getLaravelSettingsCacheKey();
 
         $key =  $imageCacheKey.md5(serialize([$orderBy, $order,  $page, $search, $startDate, $endDate,  ]));
 
-        $images = CacheHelper::init($imageCacheKey)->remember(
+        $images = CacheControl::init($imageCacheKey)->remember(
             $key,
             now()->addDay(),
             function () use ($request) {

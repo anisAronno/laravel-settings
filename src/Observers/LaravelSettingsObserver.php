@@ -2,7 +2,8 @@
 
 namespace AnisAronno\LaravelSettings\Observers;
 
-use AnisAronno\LaravelSettings\Helpers\CacheHelper;
+use AnisAronno\LaravelCacheMaster\CacheControl;
+use AnisAronno\LaravelSettings\Helpers\CacheKey;
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
 
 class LaravelSettingsObserver
@@ -11,7 +12,7 @@ class LaravelSettingsObserver
 
     public function __construct()
     {
-        $this->settingsCacheKey = CacheHelper::getLaravelSettingsCacheKey();
+        $this->settingsCacheKey = CacheKey::getLaravelSettingsCacheKey();
     }
 
     /**
@@ -22,7 +23,7 @@ class LaravelSettingsObserver
      */
     public function created(SettingsProperty $settings): void
     {
-        CacheHelper::forgetCache($this->settingsCacheKey);
+        CacheControl::forgetCache($this->settingsCacheKey);
     }
 
     /**
@@ -33,7 +34,7 @@ class LaravelSettingsObserver
      */
     public function updated(SettingsProperty $settings): void
     {
-        CacheHelper::forgetCache($this->settingsCacheKey);
+        CacheControl::forgetCache($this->settingsCacheKey);
     }
 
     /**
@@ -44,7 +45,7 @@ class LaravelSettingsObserver
      */
     public function deleted(SettingsProperty $settings): void
     {
-        CacheHelper::forgetCache($this->settingsCacheKey);
+        CacheControl::forgetCache($this->settingsCacheKey);
     }
 
     /**
@@ -55,7 +56,7 @@ class LaravelSettingsObserver
      */
     public function restored(SettingsProperty $settings): void
     {
-        CacheHelper::forgetCache($this->settingsCacheKey);
+        CacheControl::forgetCache($this->settingsCacheKey);
     }
 
     /**
@@ -66,6 +67,6 @@ class LaravelSettingsObserver
      */
     public function forceDeleted(SettingsProperty $settings): void
     {
-        CacheHelper::forgetCache($this->settingsCacheKey);
+        CacheControl::forgetCache($this->settingsCacheKey);
     }
 }

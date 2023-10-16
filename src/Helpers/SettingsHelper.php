@@ -2,6 +2,7 @@
 
 namespace AnisAronno\LaravelSettings\Helpers;
 
+use AnisAronno\LaravelCacheMaster\CacheControl;
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
 use Exception;
 use Illuminate\Support\Collection;
@@ -18,11 +19,11 @@ class SettingsHelper
      */
     public static function getSettings(string $settingsKey): string
     {
-        $key = CacheHelper::getLaravelSettingsCacheKey();
+        $key = CacheKey::getLaravelSettingsCacheKey();
 
 
         try {
-            $settings = CacheHelper::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
+            $settings = CacheControl::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
                 return SettingsProperty::select('settings_value')->find($settingsKey);
             });
 
@@ -113,11 +114,11 @@ class SettingsHelper
      */
     public static function getAllSettings(): Collection
     {
-        $key = CacheHelper::getLaravelSettingsCacheKey();
+        $key = CacheKey::getLaravelSettingsCacheKey();
         $cacheKey =  $key.md5(serialize(['getAllSettings']));
 
         try {
-            return CacheHelper::init($key)->remember($cacheKey, 10, function () {
+            return CacheControl::init($key)->remember($cacheKey, 10, function () {
                 return SettingsProperty::select('settings_value', 'settings_key')->orderBy('settings_key', 'asc')->get()->flatMap(function ($name) {
                     return [$name->settings_key => $name->settings_value];
                 });
