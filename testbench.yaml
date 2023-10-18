@@ -1,2 +1,19 @@
 workbench:
-  start: '/'
+    welcome: true
+    install: true
+    start: /settings
+    user: contact@anichur.com
+    guard: web
+    sync:
+        - from: ./public/
+          to: public/vendor/settings
+    build:
+        - asset-publish
+        - create-sqlite-db
+        - migrate:refresh
+    assets:
+        - settings-assets
+    discovers:
+        web: false
+        api: true
+        commands: false

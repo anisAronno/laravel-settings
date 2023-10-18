@@ -1,7 +1,7 @@
 {
     "name": "anisaronno/laravel-settings",
     "description": "Laravel Settings Table",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "license": "MIT",
     "keywords": [
         "laravel-settings",
@@ -25,9 +25,8 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.4",
-        "orchestra/testbench": "^8.0",
-        "phpunit/phpunit": "^9.0",
-        "pestphp/pest": "^1.21"
+        "orchestra/testbench": "^8.13",
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "files": [
@@ -39,25 +38,40 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AnisAronno\\LaravelSettings\\Tests\\": "tests"
+            "AnisAronno\\LaravelSettings\\Tests\\": "tests",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage"
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ]
     },
     "extra": {
         "laravel": {
             "providers": [
-                "AnisAronno\\LaravelSettings\\LaravelSettingsServiceProvider"
+                "AnisAronno\\LaravelSettings\\LaravelSettingsServiceProvider",
+                "Workbench\\App\\Providers\\WorkbenchServiceProvider"
             ]
         }
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
         }
     },
     "minimum-stability": "dev",
