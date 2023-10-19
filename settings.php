@@ -3,6 +3,18 @@
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
 use Illuminate\Support\Collection;
 
+if (!function_exists('hasSettings')) {
+    /**
+     * Check if a Settings Key Exists
+     *
+     * @param string $key
+     * @return boolean
+     */
+    function hasSettings(string $key): bool
+    {
+        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::hasSettings($key);
+    }
+}
 
 if (!function_exists('getSettings')) {
     /**

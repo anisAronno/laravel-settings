@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2790bec6e7de052ce819f15c4294b34e",
+    "content-hash": "60dc34aad0515105322902428556e7c1",
     "packages": [
         {
             "name": "anisaronno/laravel-cache-control",

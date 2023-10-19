@@ -11,6 +11,28 @@ use Illuminate\Support\Facades\DB;
 class SettingsHelper
 {
     /**
+     * Check if a Settings Key Exists
+     *
+     * @param  string  $settingsKey
+     * @return bool
+     */
+    public static function hasSettings(string $settingsKey): bool
+    {
+        $key = CacheKey::getLaravelSettingsCacheKey();
+
+        try {
+            $settings = CacheControl::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
+                return SettingsProperty::where('settings_key', $settingsKey)->exists();
+            });
+
+            return !! $settings;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+
+    /**
      * Get Settings
      *
      * @param  string  $settingsKey
