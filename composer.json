@@ -22,10 +22,9 @@
     "require": {
         "php": "^7.4|^8.0",
         "anisaronno/laravel-cache-control": "^0.0.1",
-        "laravel/framework": "^8.0|^9.0|^10.0"
+        "illuminate/support": "^8.0|^9.0|^10.0"
     },
     "require-dev": {
-        "mockery/mockery": "^1.6",
         "orchestra/testbench": "^8.13",
         "phpunit/phpunit": "^10.4"
     },
@@ -39,10 +38,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AnisAronno\\LaravelSettings\\Tests\\": "tests",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+            "AnisAronno\\LaravelSettings\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -52,8 +48,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "AnisAronno\\LaravelSettings\\LaravelSettingsServiceProvider",
-                "Workbench\\App\\Providers\\WorkbenchServiceProvider"
+                "AnisAronno\\LaravelSettings\\LaravelSettingsServiceProvider"
             ]
         }
     },
