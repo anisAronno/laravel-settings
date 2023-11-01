@@ -9,4 +9,5 @@ return [
     */
 
     'cache_expiry_time' => 60,
+    'guard' => ['auth'],
 ];

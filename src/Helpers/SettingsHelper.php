@@ -18,14 +18,15 @@ class SettingsHelper
      */
     public static function hasSettings(string $settingsKey): bool
     {
-        $key = CacheKey::getLaravelSettingsCacheKey();
+        $tagKey = CacheKey::getLaravelSettingsCacheKey();
+        $cacheKey = 'isExist'.$settingsKey;
 
         try {
-            $settings = CacheControl::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
+            $settings = CacheControl::init($tagKey)->remember($cacheKey, now()->addDay(), function () use ($settingsKey) {
                 return SettingsProperty::where('settings_key', $settingsKey)->exists();
             });
 
-            return !! $settings;
+            return !!$settings;
         } catch (\Throwable $th) {
             return false;
         }
@@ -71,7 +72,7 @@ class SettingsHelper
      */
     public static function setSettings(string $key, string $value): SettingsProperty
     {
-        if(! self::isKeyAlphaDash($key, 'ascii')) {
+        if(!self::isKeyAlphaDash($key, 'ascii')) {
             throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
         }
 
@@ -108,7 +109,7 @@ class SettingsHelper
      */
     public static function upsertSettings(string $key, string $value): SettingsProperty
     {
-        if(! self::isKeyAlphaDash($key, 'ascii')) {
+        if(!self::isKeyAlphaDash($key, 'ascii')) {
             throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
         }
 
@@ -160,7 +161,7 @@ class SettingsHelper
      */
     public static function updateSettings(string $key, string $value = ''): bool
     {
-        if(! self::isKeyAlphaDash($key, 'ascii')) {
+        if(!self::isKeyAlphaDash($key, 'ascii')) {
             throw new Exception("The settings key field must only contain letters, numbers, dashes, and underscores", 400);
         }
 
@@ -215,7 +216,7 @@ class SettingsHelper
      */
     private static function isKeyAlphaDash($value, string $parameters = 'ascii'): bool
     {
-        if (! is_string($value) && ! is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             return false;
         }
 

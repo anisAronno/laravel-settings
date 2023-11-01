@@ -11,6 +11,7 @@
     - [Run Seeder](#run-seeder)
     - [Define User Model Relation (Optional)](#define-user-model-relation-optional)
   - [Usage](#usage)
+    - [Check if a Key Exists in Database](#check-if-a-key-exists-in-database)
     - [Get Settings Field](#get-settings-field)
     - [Get All Settings Fields](#get-all-settings-fields)
     - [Set Settings](#set-settings)
@@ -65,6 +66,13 @@ public function settingsProperties(): HasMany
 ## Usage
 The package provides methods for managing settings. Here are the available functions:
 
+### Check if a Key Exists in Database
+You can use the `hasSettings` method to check if a key exists in the database:
+
+```php
+hasSettings(string $key);
+```
+
 ### Get Settings Field
 Retrieve a specific setting using its key:
 
@@ -110,11 +118,23 @@ deleteSettings(string $key);
 ## Settings Table CRUD
 To manage your settings table, you can use the following routes:
 
-- Get all settings: `api/v1/settings` (GET) (name: `settings.index`)
-- Get a single setting: `api/v1/settings/{setting_key}` (GET) (name: `settings.show`)
+- Get all settings: `api/v1/settings` (GET) (name: `settings.index`) - No middleware required
+- Get a single setting: `api/v1/settings/{setting_key}` (GET) (name: `settings.show`) - No middleware required
 - Store a new setting: `api/v1/settings` (POST) (name: `settings.store`)
 - Update a setting: `api/v1/settings/update/{setting_key}` (POST) (name: `settings.update`)
 - Delete a setting: `api/v1/settings/{setting_key}` (DELETE) (name: `settings.destroy`)
+
+You can customize the authentication guard for the routes by publishing the config file and changing the 'guard' key to your desired authentication guard:
+
+```php
+'guard' => ['auth'],
+```
+
+Make sure to publish the config file using the following command:
+
+```shell
+php artisan vendor:publish --tag=laravel-settings
+```
 
 To view the complete route list, run:
 
