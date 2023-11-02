@@ -19,7 +19,6 @@ class SettingsResources extends JsonResource
             'id' => $this->id,
             'settings_key' => $this->settings_key,
             'settings_value' =>  $this->settings_value,
-            'user' =>  $this->whenLoaded('user'),
             'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
         ];
     }

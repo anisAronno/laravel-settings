@@ -9,7 +9,6 @@
     - [Publish Migration, Factory, Config, and Seeder](#publish-migration-factory-config-and-seeder)
     - [Run Migration](#run-migration)
     - [Run Seeder](#run-seeder)
-    - [Define User Model Relation (Optional)](#define-user-model-relation-optional)
   - [Usage](#usage)
     - [Check if a Key Exists in Database](#check-if-a-key-exists-in-database)
     - [Get Settings Field](#get-settings-field)
@@ -51,16 +50,6 @@ Seed the settings table with initial data:
 
 ```shell
 php artisan db:seed --class=AnisAronno\\LaravelSettings\\Database\\Seeders\\LaravelSettingsSeeder
-```
-
-### Define User Model Relation (Optional)
-If you want to relate settings to a user, add the following relation in your User model:
-
-```php
-public function settingsProperties(): HasMany
-{
-    return $this->hasMany(SettingsProperty::class, 'user_id', 'id');
-}
 ```
 
 ## Usage

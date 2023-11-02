@@ -38,7 +38,7 @@ class LaravelSettingsController extends Controller
             $key,
             now()->addDay(),
             function () use ($request) {
-                return SettingsProperty::query()->with('user')
+                return SettingsProperty::query()
                     ->when($request->has('search'), function ($query) use ($request) {
                         $query->where('title', 'LIKE', '%' . $request->input('search') . '%');
                     })

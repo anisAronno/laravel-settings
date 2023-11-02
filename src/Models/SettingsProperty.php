@@ -2,10 +2,8 @@
 
 namespace AnisAronno\LaravelSettings\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static where(string $string, string $settingsKey)
@@ -14,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static findOrFail($key)
  * @property mixed|string $settings_key
  * @property mixed|string $settings_value
- * @property mixed|string $user_id
  */
 class SettingsProperty extends Model
 {
@@ -23,7 +20,6 @@ class SettingsProperty extends Model
     protected $fillable = [
         'settings_key',
         'settings_value',
-        'user_id',
     ];
 
     /**
@@ -36,9 +32,4 @@ class SettingsProperty extends Model
     public $incrementing = false;
 
     protected $keyType = 'string';
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
 }

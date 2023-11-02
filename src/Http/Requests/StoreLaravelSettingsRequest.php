@@ -2,7 +2,7 @@
 
 namespace AnisAronno\LaravelSettings\Http\Requests;
 
-use AnisAronno\LaravelSettings\Rules\SettingsKeyUniqueRule;
+use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -18,7 +18,7 @@ class StoreLaravelSettingsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::check();
     }
 
     /**

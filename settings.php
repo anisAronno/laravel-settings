@@ -56,6 +56,10 @@ if (!function_exists('setSettings')) {
      */
     function setSettings(string $key, string  $value): SettingsProperty
     {
+        if (!app()->runningInConsole()) {
+            abort_if(!auth()->user(), 403, 'Unauthenticated.');
+        }
+
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::setSettings($key, $value);
     }
 }
@@ -72,6 +76,7 @@ if (!function_exists('updateSettings')) {
      */
     function updateSettings(string $key, string  $value): bool
     {
+        abort_if(!auth()->user(), 403, 'Unauthenticated.');
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::updateSettings($key, $value);
     }
 }
@@ -88,6 +93,8 @@ if (!function_exists('upsertSettings')) {
      */
     function upsertSettings(string $key, string  $value): SettingsProperty
     {
+        abort_if(!auth()->user(), 403, 'Unauthenticated.');
+
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::upsertSettings($key, $value);
     }
 }
@@ -103,6 +110,7 @@ if (!function_exists('deleteSettings')) {
      */
     function deleteSettings(string $key): bool
     {
+        abort_if(!auth()->user(), 403, 'Unauthenticated.');
         return AnisAronno\LaravelSettings\Helpers\SettingsHelper::deleteSettings($key);
     }
 }

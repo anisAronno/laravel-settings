@@ -19,7 +19,7 @@ class SettingsHelper
     public static function hasSettings(string $settingsKey): bool
     {
         $tagKey = CacheKey::getLaravelSettingsCacheKey();
-        $cacheKey = 'isExist'.$settingsKey;
+        $cacheKey = $settingsKey.'_'.'isExist';
 
         try {
             $settings = CacheControl::init($tagKey)->remember($cacheKey, now()->addDay(), function () use ($settingsKey) {
@@ -87,7 +87,6 @@ class SettingsHelper
         try {
             $settingProperty->settings_key = $key;
             $settingProperty->settings_value = $value;
-            $settingProperty->user_id = auth()->id() ?? null;
             $settingProperty->save();
 
             DB::commit();
@@ -118,7 +117,7 @@ class SettingsHelper
         try {
             $settingProperty = SettingsProperty::updateOrCreate(
                 ['settings_key' => $key],
-                ['settings_value' => $value, 'user_id' => auth()->id() ?? null ]
+                ['settings_value' => $value]
             );
 
             DB::commit();
