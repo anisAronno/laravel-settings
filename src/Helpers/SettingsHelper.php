@@ -2,7 +2,6 @@
 
 namespace AnisAronno\LaravelSettings\Helpers;
 
-use AnisAronno\LaravelCacheMaster\CacheControl;
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
 use Exception;
 use Illuminate\Support\Collection;
@@ -18,15 +17,8 @@ class SettingsHelper
      */
     public static function hasSettings(string $settingsKey): bool
     {
-        $tagKey = CacheKey::getLaravelSettingsCacheKey();
-        $cacheKey = $settingsKey.'_'.'isExist';
-
         try {
-            $settings = CacheControl::init($tagKey)->remember($cacheKey, now()->addDay(), function () use ($settingsKey) {
-                return SettingsProperty::where('settings_key', $settingsKey)->exists();
-            });
-
-            return !!$settings;
+            return SettingsProperty::where('settings_key', $settingsKey)->exists();
         } catch (\Throwable $th) {
             return false;
         }
@@ -42,13 +34,8 @@ class SettingsHelper
      */
     public static function getSettings(string $settingsKey): string
     {
-        $key = CacheKey::getLaravelSettingsCacheKey();
-
-
         try {
-            $settings = CacheControl::init($key)->remember($settingsKey, now()->addDay(), function () use ($settingsKey) {
-                return SettingsProperty::select('settings_value')->find($settingsKey);
-            });
+            $settings =   SettingsProperty::select('settings_value')->find($settingsKey);
 
             if(isset($settings['settings_value'])) {
                 return $settings['settings_value'];
@@ -136,15 +123,11 @@ class SettingsHelper
      */
     public static function getAllSettings(): Collection
     {
-        $key = CacheKey::getLaravelSettingsCacheKey();
-        $cacheKey =  $key.md5(serialize(['getAllSettings']));
-
         try {
-            return CacheControl::init($key)->remember($cacheKey, 10, function () {
-                return SettingsProperty::select('settings_value', 'settings_key')->orderBy('settings_key', 'asc')->get()->flatMap(function ($name) {
-                    return [$name->settings_key => $name->settings_value];
-                });
+            return SettingsProperty::select('settings_value', 'settings_key')->orderBy('settings_key', 'asc')->get()->flatMap(function ($name) {
+                return [$name->settings_key => $name->settings_value];
             });
+
         } catch (\Throwable $th) {
             throw new Exception($th->getMessage(), 400);
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace AnisAronno\LaravelSettings\Database\Seeders;
+namespace Database\Seeders;
 
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
 use Illuminate\Database\Seeder;

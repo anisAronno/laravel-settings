@@ -17,7 +17,6 @@
     - [Update Settings](#update-settings)
     - [Update or Create Settings](#update-or-create-settings)
     - [Delete Settings](#delete-settings)
-  - [Settings Table CRUD](#settings-table-crud)
   - [Contribution Guide](#contribution-guide)
   - [License](#license)
 
@@ -49,7 +48,7 @@ php artisan migrate
 Seed the settings table with initial data:
 
 ```shell
-php artisan db:seed --class=AnisAronno\\LaravelSettings\\Database\\Seeders\\LaravelSettingsSeeder
+php artisan db:seed --class=LaravelSettingsSeeder::class
 ```
 
 ## Usage
@@ -102,33 +101,6 @@ Update an existing setting:
 
 ```php
 deleteSettings(string $key);
-```
-
-## Settings Table CRUD
-To manage your settings table, you can use the following routes:
-
-- Get all settings: `api/v1/settings` (GET) (name: `settings.index`) - No middleware required
-- Get a single setting: `api/v1/settings/{setting_key}` (GET) (name: `settings.show`) - No middleware required
-- Store a new setting: `api/v1/settings` (POST) (name: `settings.store`)
-- Update a setting: `api/v1/settings/update/{setting_key}` (POST) (name: `settings.update`)
-- Delete a setting: `api/v1/settings/{setting_key}` (DELETE) (name: `settings.destroy`)
-
-You can customize the authentication guard for the routes by publishing the config file and changing the 'guard' key to your desired authentication guard:
-
-```php
-'guard' => ['auth'],
-```
-
-Make sure to publish the config file using the following command:
-
-```shell
-php artisan vendor:publish --tag=laravel-settings
-```
-
-To view the complete route list, run:
-
-```shell
-php artisan route:list
 ```
 
 ## Contribution Guide
