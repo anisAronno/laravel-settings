@@ -4,8 +4,11 @@ namespace AnisAronno\LaravelSettings\Helpers;
 
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use AnisAronno\LaravelSettings\Helpers\CacheKey;
 
 class SettingsHelper
 {
@@ -17,8 +20,21 @@ class SettingsHelper
      */
     public static function hasSettings(string $settingsKey): bool
     {
+        $cacheKey = CacheKey::getSettingsCacheKey();
+        $key = $cacheKey.md5($settingsKey.'_'.'isExist');
+
         try {
-            return SettingsProperty::where('settings_key', $settingsKey)->exists();
+            $settings = Cache::remember(
+                $key,
+                now()->addDay(),
+                function () use ($settingsKey) {
+                    return SettingsProperty::where('settings_key', $settingsKey)->exists();
+                }
+            );
+
+            Cache::put($cacheKey, array_merge(Cache::get($cacheKey, []), [$key]));
+
+            return $settings;
         } catch (\Throwable $th) {
             return false;
         }
@@ -34,8 +50,18 @@ class SettingsHelper
      */
     public static function getSettings(string $settingsKey): string
     {
+        $cacheKey = CacheKey::getSettingsCacheKey();
+        $key = $cacheKey.md5($settingsKey);
         try {
-            $settings =   SettingsProperty::select('settings_value')->find($settingsKey);
+            $settings = Cache::remember(
+                $key,
+                now()->addDay(),
+                function () use ($settingsKey) {
+                    return   SettingsProperty::select('settings_value')->find($settingsKey);
+                }
+            );
+
+            Cache::put($cacheKey, array_merge(Cache::get($cacheKey, []), [$key]));
 
             if(isset($settings['settings_value'])) {
                 return $settings['settings_value'];
@@ -121,13 +147,27 @@ class SettingsHelper
      * @return Collection
      * @throws Exception
      */
-    public static function getAllSettings(): Collection
+    public static function getAllSettings(Request $request): Collection
     {
-        try {
-            return SettingsProperty::select('settings_value', 'settings_key')->orderBy('settings_key', 'asc')->get()->flatMap(function ($name) {
-                return [$name->settings_key => $name->settings_value];
-            });
+        $queryParams = request()->query();
+        ksort($queryParams);
+        $queryString = http_build_query($queryParams);
+        $settingsCacheKey = CacheKey::getSettingsCacheKey();
+        $key = $settingsCacheKey.md5($queryString);
 
+        try {
+            $settings = Cache::remember(
+                $key,
+                now()->addDay(),
+                function () use ($request) {
+                    return SettingsProperty::select('settings_value', 'settings_key')->orderBy('settings_key', 'asc')->get()->flatMap(function ($name) {
+                        return [$name->settings_key => $name->settings_value];
+                    });
+                }
+            );
+
+            Cache::put($settingsCacheKey, array_merge(Cache::get($settingsCacheKey, []), [$key]));
+            return $settings;
         } catch (\Throwable $th) {
             throw new Exception($th->getMessage(), 400);
         }

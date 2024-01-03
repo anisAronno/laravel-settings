@@ -1,5 +1,6 @@
 <?php
 
+use AnisAronno\LaravelSettings\Helpers\SettingsHelper;
 use AnisAronno\LaravelSettings\Models\SettingsProperty;
 use Illuminate\Support\Collection;
 
@@ -12,7 +13,7 @@ if (!function_exists('hasSettings')) {
      */
     function hasSettings(string $key): bool
     {
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::hasSettings($key);
+        return SettingsHelper::hasSettings($key);
     }
 }
 
@@ -26,7 +27,7 @@ if (!function_exists('getSettings')) {
      */
     function getSettings(string $key): string
     {
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::getSettings($key);
+        return SettingsHelper::getSettings($key);
     }
 }
 
@@ -40,7 +41,7 @@ if (!function_exists('getAllSettings')) {
      */
     function getAllSettings(): Collection
     {
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::getAllSettings();
+        return SettingsHelper::getAllSettings();
     }
 }
 
@@ -60,7 +61,7 @@ if (!function_exists('setSettings')) {
             abort_if(!auth()->user(), 403, 'Unauthenticated.');
         }
 
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::setSettings($key, $value);
+        return SettingsHelper::setSettings($key, $value);
     }
 }
 
@@ -77,7 +78,7 @@ if (!function_exists('updateSettings')) {
     function updateSettings(string $key, string  $value): bool
     {
         abort_if(!auth()->user(), 403, 'Unauthenticated.');
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::updateSettings($key, $value);
+        return SettingsHelper::updateSettings($key, $value);
     }
 }
 
@@ -95,7 +96,7 @@ if (!function_exists('upsertSettings')) {
     {
         abort_if(!auth()->user(), 403, 'Unauthenticated.');
 
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::upsertSettings($key, $value);
+        return SettingsHelper::upsertSettings($key, $value);
     }
 }
 
@@ -111,6 +112,6 @@ if (!function_exists('deleteSettings')) {
     function deleteSettings(string $key): bool
     {
         abort_if(!auth()->user(), 403, 'Unauthenticated.');
-        return AnisAronno\LaravelSettings\Helpers\SettingsHelper::deleteSettings($key);
+        return SettingsHelper::deleteSettings($key);
     }
 }
