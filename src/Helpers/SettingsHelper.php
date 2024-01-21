@@ -137,13 +137,13 @@ class SettingsHelper
     public static function getAllSettings(): Collection
     {
         $settingsCacheKey = CacheKey::getSettingsCacheKey();
-        $key              = $settingsCacheKey;
+        $key              = $settingsCacheKey.'_data';
 
         try {
             $existingCache = is_array($cachedSettings = Cache::get($settingsCacheKey)) ? $cachedSettings : [];
 
-            if (isset($existingCache['data']) && is_array($existingCache['data'])) {
-                return collect($existingCache['data']);
+            if (Cache::has($key)) {
+                return collect(Cache::get($key));
             }
 
             $settings = SettingsProperty::select('settings_value', 'settings_key')
@@ -154,7 +154,8 @@ class SettingsHelper
                     return [$name->settings_key => $name->settings_value];
                 });
 
-            Cache::put($settingsCacheKey, array_merge($existingCache, ['data' => $settings, $key]));
+            Cache::put($key, $settings, now()->addDay());
+            Cache::put($settingsCacheKey, array_merge($existingCache, ['data_key' => $key]));
 
             return collect($settings);
         } catch (\Throwable $th) {
